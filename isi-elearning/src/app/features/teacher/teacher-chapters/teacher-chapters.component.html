@@ -1,0 +1,25 @@
+<h2>📚 Gestion des chapitres</h2>
+
+<div class="form">
+  <input [(ngModel)]="form.title" placeholder="Titre du chapitre">
+
+  <input type="file" (change)="onFileSelected($event)">
+
+  <button (click)="createChapter()">Uploader</button>
+</div>
+
+<div class="chapters">
+  @for (c of chapters; track c.id) {
+    <div class="chapter-card">
+      <h3>{{ c.title }}</h3>
+
+      @if (c.video_url) {
+        <video width="300" controls>
+          <source [src]="c.video_url" type="video/mp4">
+        </video>
+      }
+
+      <button (click)="deleteChapter(c.id)">❌ Supprimer</button>
+    </div>
+  }
+</div>

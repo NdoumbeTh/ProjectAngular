@@ -1,0 +1,58 @@
+<div class="courses-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h2>Tous les cours</h2>
+      <p>Explorez et inscrivez-vous aux cours disponibles</p>
+    </div>
+    <span class="count-badge">{{ courses.length }} cours</span>
+  </div>
+
+  <!-- EMPTY -->
+  @if (courses.length === 0) {
+    <div class="empty">
+      <i class="ti ti-book-off"></i>
+      <h3>Aucun cours disponible</h3>
+      <p>Revenez plus tard pour découvrir de nouveaux cours.</p>
+    </div>
+  }
+
+  <!-- GRID -->
+  <div class="courses">
+    @for (course of courses; track course.id) {
+      <div class="course-card">
+
+        <div class="course-thumb" [style.background]="course.color || '#6c47ff'">
+          <i class="ti ti-book-2"></i>
+        </div>
+
+        <div class="course-body">
+          <h3>{{ course.title }}</h3>
+          <p class="course-teacher">
+            <i class="ti ti-user"></i>
+            {{ course.teacher || 'Enseignant' }}
+          </p>
+          @if (course.description) {
+            <p class="course-desc">{{ course.description }}</p>
+          }
+        </div>
+
+        <div class="course-footer">
+          <button
+            class="btn-view"
+            [routerLink]="['/student/course', course.id]">
+            <i class="ti ti-eye"></i> Voir
+          </button>
+          <button
+            class="btn-enroll"
+            (click)="enroll(course.id)">
+            <i class="ti ti-plus"></i> S'inscrire
+          </button>
+        </div>
+
+      </div>
+    }
+  </div>
+
+</div>

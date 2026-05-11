@@ -1,0 +1,30 @@
+<h2>Bienvenue {{user.name}}</h2>
+
+<div class="card">
+
+  <h3>Mes cours</h3>
+
+  <div *ngFor="let course of courses" class="progress-item">
+
+    <span>{{course.title}}</span>
+
+    <div class="progress-bar">
+      <div class="progress" [style.width.%]="course.progress"></div>
+    </div>
+
+    <span>{{course.progress}}%</span>
+
+  </div>
+
+</div>
+
+<div class="card">
+  <h3>Devoirs à rendre</h3>
+
+  <ul>
+    <li *ngFor="let a of assignments">
+      {{a.title}} - {{a.deadline}}
+    </li>
+  </ul>
+
+</div>

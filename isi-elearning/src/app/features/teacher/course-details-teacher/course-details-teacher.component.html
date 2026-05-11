@@ -1,0 +1,237 @@
+<div class="teacher-course-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-left">
+      <a routerLink="/teacher" class="btn-back">
+        <i class="ti ti-arrow-left"></i> Retour
+      </a>
+      <div class="course-thumb">
+        <i class="ti ti-book-2"></i>
+      </div>
+      <div>
+        <h2>{{ course?.title }}</h2>
+        <p>Gestion du cours</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button [class.active]="tab === 'chapters'" (click)="tab = 'chapters'">
+      <i class="ti ti-book"></i> Chapitres
+      <span class="tab-count">{{ chapters.length }}</span>
+    </button>
+    <button [class.active]="tab === 'quiz'" (click)="tab = 'quiz'">
+      <i class="ti ti-help-circle"></i> Quiz
+    </button>
+    <button [class.active]="tab === 'assignments'" (click)="tab = 'assignments'">
+      <i class="ti ti-clipboard-list"></i> Devoirs
+      <span class="tab-count">{{ assignments.length }}</span>
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- CHAPITRES                             -->
+  <!-- ══════════════════════════════════════ -->
+  @if (tab === 'chapters') {
+    <div class="tab-content">
+
+      <!-- FORM -->
+      <div class="form-card">
+        <h3><i class="ti ti-plus"></i> Ajouter un chapitre</h3>
+        <div class="field">
+          <label>Titre du chapitre</label>
+          <input type="text" [(ngModel)]="newChapter.title" placeholder="Ex : Introduction au composant">
+        </div>
+        <div class="field">
+          <label>Vidéo (MP4)</label>
+          <input type="file" accept="video/*" (change)="onVideoSelected($event)">
+        </div>
+        <button class="btn-primary" (click)="addChapter()">
+          <i class="ti ti-plus"></i> Ajouter
+        </button>
+      </div>
+
+      <!-- LISTE -->
+      @if (chapters.length === 0) {
+        <div class="empty-state">
+          <i class="ti ti-book-off"></i>
+          <p>Aucun chapitre. Ajoutez le premier chapitre ci-dessus.</p>
+        </div>
+      }
+
+      <div class="chapters-list">
+        @for (ch of chapters; track ch.id; let i = $index) {
+          <div class="chapter-card">
+            <div class="chapter-number">{{ i + 1 }}</div>
+            <div class="chapter-body">
+              <h4>{{ ch.title }}</h4>
+              @if (ch.video_url) {
+                <video controls class="chapter-video">
+                  <source [src]="ch.video_url" type="video/mp4">
+                </video>
+              } @else {
+                <p class="no-video">
+                  <i class="ti ti-video-off"></i> Pas de vidéo
+                </p>
+              }
+            </div>
+            <button class="btn-danger" (click)="deleteChapter(ch.id)">
+              <i class="ti ti-trash"></i>
+            </button>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- QUIZ                                  -->
+  <!-- ══════════════════════════════════════ -->
+  @if (tab === 'quiz') {
+    <div class="tab-content">
+
+      @if (hasQuiz && quiz) {
+
+        <div class="quiz-card">
+          <div class="quiz-card-header">
+            <div class="quiz-icon">
+              <i class="ti ti-help-circle"></i>
+            </div>
+            <div class="quiz-info">
+              <h3>{{ quiz.title }}</h3>
+              <span class="questions-count">
+                <i class="ti ti-list"></i>
+                {{ quiz.questions?.length || 0 }} question(s)
+              </span>
+            </div>
+            <div class="quiz-actions">
+              <button class="btn-primary"
+                [routerLink]="['/teacher/course', course.id, 'quiz']">
+                <i class="ti ti-pencil"></i> Modifier
+              </button>
+              <button class="btn-danger" (click)="deleteQuiz()">
+                <i class="ti ti-trash"></i> Supprimer
+              </button>
+            </div>
+          </div>
+
+          <!-- QUESTIONS -->
+          @if (quiz.questions?.length > 0) {
+            <div class="questions-list">
+              @for (q of quiz.questions; track q.id; let i = $index) {
+                <div class="question-card">
+                  <div class="question-header">
+                    <span class="question-num">Q{{ i + 1 }}</span>
+                    <p class="question-text">{{ q.question }}</p>
+                  </div>
+                  <ul class="options-list">
+                    @for (opt of q.options; track $index) {
+                      <li [class.correct]="opt === q.correctAnswer">
+                        <i class="ti"
+                           [class.ti-circle-check]="opt === q.correctAnswer"
+                           [class.ti-circle]="opt !== q.correctAnswer">
+                        </i>
+                        {{ opt }}
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+      } @else {
+
+        <div class="empty-state">
+          <i class="ti ti-help-off"></i>
+          <p>Aucun quiz pour ce cours.</p>
+          <button class="btn-primary"
+            [routerLink]="['/teacher/course', course.id, 'quiz']">
+            <i class="ti ti-plus"></i> Créer un quiz
+          </button>
+        </div>
+
+      }
+
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- DEVOIRS                               -->
+  <!-- ══════════════════════════════════════ -->
+  @if (tab === 'assignments') {
+    <div class="tab-content">
+
+      <!-- FORM -->
+      <div class="form-card">
+        <h3><i class="ti ti-plus"></i> Créer un devoir</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label>Titre</label>
+            <input type="text" [(ngModel)]="newAssignment.title" placeholder="Titre du devoir">
+          </div>
+          <div class="field">
+            <label>Date limite</label>
+            <input type="date" [(ngModel)]="newAssignment.due_date">
+          </div>
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea [(ngModel)]="newAssignment.description" placeholder="Consignes du devoir..."></textarea>
+        </div>
+        <div class="field">
+          <label>Fichier sujet (optionnel)</label>
+          <input type="file" (change)="onAssignmentFileSelected($event)">
+        </div>
+        <button class="btn-primary" (click)="addAssignment()">
+          <i class="ti ti-plus"></i> Créer le devoir
+        </button>
+      </div>
+
+      <!-- LISTE -->
+      @if (assignments.length === 0) {
+        <div class="empty-state">
+          <i class="ti ti-clipboard-off"></i>
+          <p>Aucun devoir pour ce cours.</p>
+        </div>
+      }
+
+      <div class="assignments-list">
+        @for (a of assignments; track a.id) {
+          <div class="assignment-card">
+            <div class="assignment-header">
+              <div class="assignment-info">
+                <h4>{{ a.title }}</h4>
+                <p>{{ a.description }}</p>
+              </div>
+              <div class="assignment-meta">
+                @if (a.due_date) {
+                  <span class="due-date">
+                    <i class="ti ti-calendar"></i>
+                    {{ a.due_date | date:'dd/MM/yyyy' }}
+                  </span>
+                }
+              </div>
+            </div>
+            <div class="assignment-footer">
+              @if (a.file_url) {
+                <a [href]="a.file_url" target="_blank" class="btn-file">
+                  <i class="ti ti-file"></i> Voir le sujet
+                </a>
+              }
+              <button class="btn-primary" (click)="viewSubmissions(a.id)">
+                <i class="ti ti-inbox"></i> Voir les soumissions
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+</div>

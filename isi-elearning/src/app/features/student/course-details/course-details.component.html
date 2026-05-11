@@ -1,0 +1,280 @@
+<div class="course-page">
+
+  <!-- HEADER DU COURS -->
+  <div class="course-header">
+    <div class="course-header-left">
+      <a routerLink="/student" class="btn-back">
+        <i class="ti ti-arrow-left"></i> Retour
+      </a>
+      <div class="course-thumb">
+        <i class="ti ti-book-2"></i>
+      </div>
+      <div>
+        <h2>{{ course?.title }}</h2>
+        <p>{{ course?.description }}</p>
+      </div>
+    </div>
+
+    @if (!isEnrolled) {
+      <button (click)="enroll()" class="btn-enroll">
+        <i class="ti ti-plus"></i> S'inscrire au cours
+      </button>
+    }
+
+    @if (isEnrolled) {
+      <div class="enrolled-badge">
+        <i class="ti ti-circle-check"></i> Inscrit
+      </div>
+    }
+  </div>
+
+  @if (!isEnrolled) {
+    <div class="not-enrolled">
+      <i class="ti ti-lock"></i>
+      <h3>Inscrivez-vous pour accéder au contenu</h3>
+      <p>Ce cours contient des chapitres vidéo, un quiz et des devoirs.</p>
+      <button (click)="enroll()" class="btn-enroll">
+        <i class="ti ti-plus"></i> S'inscrire maintenant
+      </button>
+    </div>
+  }
+
+  @if (isEnrolled) {
+
+    <!-- ── PROGRESSION ── -->
+    <div class="progress-card">
+      <div class="progress-header">
+        <div>
+          <h3><i class="ti ti-chart-line"></i> Ma progression</h3>
+          <p>{{ progress.completed }} / {{ progress.total }} chapitres complétés</p>
+        </div>
+        <div class="progress-pct-badge" [ngClass]="{
+          'green':  progress.percent === 100,
+          'orange': progress.percent >= 50 && progress.percent < 100,
+          'blue':   progress.percent < 50
+        }">
+          {{ progress.percent }}%
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress.percent"></div>
+      </div>
+      @if (progress.percent === 100) {
+        <div class="completed-msg">
+          <i class="ti ti-trophy"></i> Félicitations, vous avez terminé ce cours !
+        </div>
+      }
+    </div>
+
+    <!-- ── GRILLE PRINCIPALE ── -->
+    <div class="content-grid">
+
+      <!-- ── CHAPITRES ── -->
+      <div class="section-card chapters-section">
+        <div class="section-title">
+          <i class="ti ti-book"></i>
+          <h3>Chapitres</h3>
+          <span class="count-badge">{{ chapters.length }}</span>
+        </div>
+
+        <div class="chapters-list">
+          @for (c of chapters; let i = $index; track c.id) {
+            <div class="chapter-item" [class.completed]="progress.completedChapters?.includes(c.id)" [class.locked]="!isUnlocked(i)">
+
+              <div class="chapter-number">{{ i + 1 }}</div>
+
+              <div class="chapter-content">
+                <div class="chapter-top">
+                  <h4>{{ c.title }}</h4>
+                  @if (progress.completedChapters?.includes(c.id)) {
+                    <span class="chapter-badge done">
+                      <i class="ti ti-check"></i> Terminé
+                    </span>
+                  } @else if (!isUnlocked(i)) {
+                    <span class="chapter-badge locked-badge">
+                      <i class="ti ti-lock"></i> Verrouillé
+                    </span>
+                  }
+                </div>
+
+                @if (!isUnlocked(i)) {
+                  <p class="locked-msg">
+                    Terminez le chapitre précédent pour débloquer.
+                  </p>
+                }
+
+                @if (isUnlocked(i)) {
+                  @if (c.video_url) {
+                    <video controls class="chapter-video">
+                      <source [src]="c.video_url" type="video/mp4">
+                    </video>
+                  }
+
+                  <button
+                    class="btn-done"
+                    (click)="markDone(c.id)"
+                    [disabled]="progress.completedChapters?.includes(c.id)">
+                    @if (progress.completedChapters?.includes(c.id)) {
+                      <i class="ti ti-circle-check"></i> Terminé
+                    } @else {
+                      <i class="ti ti-check"></i> Marquer comme terminé
+                    }
+                  </button>
+                }
+              </div>
+
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- ── COLONNE DROITE ── -->
+      <div class="right-column">
+
+        <!-- QUIZ -->
+        <div class="section-card">
+          <div class="section-title">
+            <i class="ti ti-help-circle"></i>
+            <h3>Quiz</h3>
+          </div>
+
+          @if (hasQuiz) {
+            <div class="quiz-box">
+              <div class="quiz-icon">
+                <i class="ti ti-help-circle"></i>
+              </div>
+              <div>
+                <p class="quiz-title">{{ quiz?.title }}</p>
+                <p class="quiz-sub">Testez vos connaissances</p>
+              </div>
+              <button
+                class="btn-quiz"
+                [routerLink]="['/quiz', course?.id]">
+                <i class="ti ti-player-play"></i> Commencer
+              </button>
+            </div>
+          } @else {
+            <div class="empty-mini">
+              <i class="ti ti-help-off"></i>
+              <p>Aucun quiz disponible.</p>
+            </div>
+          }
+        </div>
+
+        <!-- DEVOIRS -->
+        <div class="section-card">
+          <div class="section-title">
+            <i class="ti ti-clipboard-list"></i>
+            <h3>Devoirs</h3>
+            <span class="count-badge">{{ assignments.length }}</span>
+          </div>
+
+          @if (assignments.length === 0) {
+            <div class="empty-mini">
+              <i class="ti ti-clipboard-off"></i>
+              <p>Aucun devoir pour ce cours.</p>
+            </div>
+          }
+
+          @for (a of assignments; track a.id) {
+            <div class="assignment-item">
+              <div class="assignment-header">
+                <h4>{{ a.title }}</h4>
+                @if (a.due_date) {
+                  <span class="due-date">
+                    <i class="ti ti-calendar"></i>
+                    {{ a.due_date | date:'dd/MM/yyyy' }}
+                  </span>
+                }
+              </div>
+
+              @if (a.description) {
+                <p class="assignment-desc">{{ a.description }}</p>
+              }
+
+              @if (a.file_url) {
+                <a [href]="a.file_url" target="_blank" class="btn-download">
+                  <i class="ti ti-download"></i> Télécharger le sujet
+                </a>
+              }
+
+              <div class="file-upload-area">
+                <input
+                  type="file"
+                  [id]="'file-' + a.id"
+                  (change)="onFileSelected($event, a.id)"
+                  class="file-input">
+                <label [for]="'file-' + a.id" class="file-label">
+                  <i class="ti ti-upload"></i>
+                  {{ selectedFiles[a.id] ? selectedFiles[a.id].name : 'Choisir un fichier' }}
+                </label>
+              </div>
+
+              <button
+                class="btn-submit"
+                (click)="submitAssignment(a.id)"
+                [disabled]="!selectedFiles[a.id]">
+                <i class="ti ti-send"></i> Envoyer le devoir
+              </button>
+            </div>
+          }
+        </div>
+
+        <!-- MES RÉSULTATS -->
+        <div class="section-card">
+          <div class="section-title">
+            <i class="ti ti-chart-bar"></i>
+            <h3>Mes résultats</h3>
+          </div>
+
+          @if (mySubmissions.length === 0) {
+            <div class="empty-mini">
+              <i class="ti ti-mood-empty"></i>
+              <p>Aucune soumission pour ce cours.</p>
+            </div>
+          }
+
+          @for (s of mySubmissions; track s.id) {
+            <div class="submission-item">
+              <div class="submission-header">
+                <h4>{{ s.title }}</h4>
+                <a [href]="s.file_url" target="_blank" class="btn-view-copy">
+                  <i class="ti ti-eye"></i> Ma copie
+                </a>
+              </div>
+
+              @if (s.grade !== null) {
+                <div class="grade-box" [ngClass]="{
+                  'green':  s.grade >= 16,
+                  'orange': s.grade >= 10 && s.grade < 16,
+                  'red':    s.grade < 10
+                }">
+                  <span class="grade-value">{{ s.grade }}/20</span>
+                  <span class="grade-label">
+                    @if (s.grade >= 16) { Très bien }
+                    @else if (s.grade >= 14) { Bien }
+                    @else if (s.grade >= 10) { Passable }
+                    @else { Insuffisant }
+                  </span>
+                </div>
+              } @else {
+                <div class="pending-box">
+                  <i class="ti ti-clock"></i> En attente de correction
+                </div>
+              }
+
+              @if (s.feedback) {
+                <div class="feedback-box">
+                  <i class="ti ti-message"></i>
+                  <p>{{ s.feedback }}</p>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

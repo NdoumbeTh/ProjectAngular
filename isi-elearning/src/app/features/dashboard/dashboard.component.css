@@ -1,0 +1,25 @@
+.card {
+  background: white;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+}
+
+.progress-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.progress-bar {
+  width: 60%;
+  height: 8px;
+  background: #ddd;
+  border-radius: 5px;
+}
+
+.progress {
+  height: 8px;
+  background: #2f6db3;
+}

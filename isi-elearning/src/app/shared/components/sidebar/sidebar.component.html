@@ -1,0 +1,46 @@
+<aside class="sidebar">
+
+  <!-- BRAND -->
+  <div class="sidebar-brand">
+    <div class="brand-logo">ISI</div>
+    <span class="brand-name">E-learning</span>
+  </div>
+
+  <!-- ROLE BADGE -->
+  <div class="role-badge" [ngClass]="role">
+    <i class="ti"
+       [class.ti-shield]="role === 'admin'"
+       [class.ti-chalkboard]="role === 'teacher'"
+       [class.ti-school]="role === 'student'">
+    </i>
+    {{ roleLabel }}
+  </div>
+
+  <!-- NAV -->
+  <nav class="sidebar-nav">
+     @for (item of navItems; track item.route) {
+      <a 
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <i class="ti {{ item.icon }}"></i>
+        <span>{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <!-- FOOTER -->
+  <div class="sidebar-footer">
+    <div class="user-avatar">{{ userInitials }}</div>
+    <div class="user-info">
+      <span class="user-name">{{ user?.name }}</span>
+      <span class="user-role">{{ roleLabel }}</span>
+    </div>
+    <button class="logout-btn" (click)="logout()" title="Déconnexion">
+  ⏻
+</button>
+  </div>
+
+</aside>

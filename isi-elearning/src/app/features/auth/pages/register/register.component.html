@@ -1,0 +1,15 @@
+<h2>Inscription</h2>
+
+<input [(ngModel)]="form.name" placeholder="Nom">
+<input [(ngModel)]="form.email" placeholder="Email">
+<input [(ngModel)]="form.password" type="password" placeholder="Mot de passe">
+
+<select [(ngModel)]="form.role">
+  <option value="student">Etudiant</option>
+  <option value="teacher">Enseignant</option>
+</select>
+
+<button (click)="register()">S'inscrire</button>
+
+<p style="color:red" *ngIf="error">{{ error }}</p>
+<p style="color:green" *ngIf="success">{{ success }}</p>

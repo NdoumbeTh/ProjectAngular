@@ -1,0 +1,173 @@
+<div class="admin-container">
+
+  <!-- HEADER -->
+  <header class="admin-header">
+    <div>
+      <h1>Dashboard Admin</h1>
+      <p>Bienvenue, {{user?.name}}</p>
+    </div>
+    <div class="user-chip">
+      <div class="user-avatar">{{user?.name?.charAt(0) | uppercase}}</div>
+      <div>
+        <span class="user-name">{{user?.name}}</span>
+        <span class="user-role">{{user?.role}}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card purple">
+      <div class="stat-icon"><i class="ti ti-users"></i></div>
+      <div class="stat-info">
+        <p class="stat-value">{{stats.users}}</p>
+        <p class="stat-label">Utilisateurs</p>
+        <p class="stat-sub">Total inscrits</p>
+      </div>
+    </div>
+
+    <div class="stat-card blue">
+      <div class="stat-icon"><i class="ti ti-book"></i></div>
+      <div class="stat-info">
+        <p class="stat-value">{{stats.courses}}</p>
+        <p class="stat-label">Cours</p>
+        <p class="stat-sub">Publiés</p>
+      </div>
+    </div>
+
+    <div class="stat-card green">
+      <div class="stat-icon"><i class="ti ti-certificate"></i></div>
+      <div class="stat-info">
+        <p class="stat-value">{{stats.enrollments}}</p>
+        <p class="stat-label">Inscriptions</p>
+        <p class="stat-sub">Total</p>
+      </div>
+    </div>
+  </div>
+<!-- GRAPHS -->
+<div class="charts-grid">
+
+  <!-- BARRES -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3><i class="ti ti-chart-bar"></i> Inscriptions par cours</h3>
+      <span class="chart-badge">Top 6</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas #barCanvas></canvas>
+    </div>
+  </div>
+
+  <!-- DOUGHNUT -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3><i class="ti ti-chart-donut"></i> Répartition des rôles</h3>
+      <span class="chart-badge">Utilisateurs</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas #doughnutCanvas></canvas>
+    </div>
+    <div class="doughnut-legend">
+      <div class="legend-item">
+        <span class="legend-dot student"></span>
+        <span>Étudiants</span>
+        <strong>{{ studentCount }}</strong>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot teacher"></span>
+        <span>Enseignants</span>
+        <strong>{{ teacherCount }}</strong>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot admin"></span>
+        <span>Admins</span>
+        <strong>{{ adminCount }}</strong>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+  <!-- BODY GRID -->
+  <div class="body-grid">
+
+    <!-- CREATE USER -->
+    <div class="form-card">
+      <h3><i class="ti ti-user-plus"></i> Créer un utilisateur</h3>
+      <div class="form-grid">
+        <input [(ngModel)]="form.name" placeholder="Nom complet">
+        <input [(ngModel)]="form.email" placeholder="Email">
+        <input [(ngModel)]="form.password" type="password" placeholder="Mot de passe">
+        <select [(ngModel)]="form.role">
+          <option value="student">Étudiant</option>
+          <option value="teacher">Enseignant</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <button class="btn-primary" (click)="createUser()">
+        <i class="ti ti-plus"></i> Créer
+      </button>
+    </div>
+
+    <!-- ROLES REPARTITION -->
+<div class="roles-card">
+  <h3><i class="ti ti-chart-pie"></i> Répartition des rôles</h3>
+  <div class="roles-list">
+    <div class="role-item">
+      <div class="role-dot student"></div>
+      <span class="role-name">Étudiants</span>
+      <span class="role-count">{{ studentCount }}</span>
+    </div>
+    <div class="role-item">
+      <div class="role-dot teacher"></div>
+      <span class="role-name">Enseignants</span>
+      <span class="role-count">{{ teacherCount }}</span>
+    </div>
+    <div class="role-item">
+      <div class="role-dot admin"></div>
+      <span class="role-name">Admins</span>
+      <span class="role-count">{{ adminCount }}</span>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+  <!-- USERS TABLE -->
+  <div class="table-card">
+    <div class="table-header">
+      <h3><i class="ti ti-users"></i> Liste des utilisateurs</h3>
+      <span class="count-badge">{{users.length}} utilisateurs</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of users">
+          <td>
+            <div class="user-cell">
+              <div class="mini-avatar">{{u.name?.charAt(0)}}</div>
+              {{u.name}}
+            </div>
+          </td>
+          <td class="email-cell">{{u.email}}</td>
+          <td>
+            <span class="badge" [ngClass]="u.role">{{u.role}}</span>
+          </td>
+          <td>
+            <button class="btn-danger" (click)="deleteUser(u.id)">
+              <i class="ti ti-trash"></i> Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

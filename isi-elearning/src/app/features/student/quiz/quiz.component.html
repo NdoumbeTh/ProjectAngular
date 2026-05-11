@@ -1,0 +1,74 @@
+<div class="quiz-container">
+
+  @if (loading) {
+
+    <div>
+      Chargement...
+    </div>
+
+  }
+
+  @if (quiz && !loading) {
+
+    <div>
+
+      <h2>{{ quiz.title }}</h2>
+
+      @if (quiz?.questions?.length > 0) {
+
+        @for (q of quiz.questions; track q.id) {
+
+          <div class="question-card">
+
+            <p class="question">
+              {{ q.question }}
+            </p>
+
+            @for (opt of q.options; track $index) {
+              <div class="option">
+                <label>
+                  <input
+                    type="radio"
+                    [name]="'q' + q.id"
+                    (change)="selectAnswer(q.id, opt.option_text || opt)">
+                  {{ opt.option_text || opt }}
+                </label>
+              </div>
+            }
+
+          </div>
+
+        }
+
+      } @else {
+
+        <p>
+          Aucune question disponible.
+        </p>
+
+      }
+
+      <button
+        class="submit-btn"
+        (click)="submitQuiz()">
+        Soumettre
+      </button>
+
+      @if (score !== null) {
+
+        <div class="result">
+
+          🎯 Score :
+          {{ score }}
+          /
+          {{ quiz.questions.length }}
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>

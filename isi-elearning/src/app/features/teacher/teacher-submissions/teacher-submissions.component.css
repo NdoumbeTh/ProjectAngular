@@ -1,0 +1,155 @@
+/* ── CONTAINER ── */
+.container {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ── TITRE ── */
+.container h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1047;
+  margin: 0 0 1.5rem;
+}
+
+/* ── TABLE ── */
+.table {
+  background: white;
+  border: 1px solid #ede9fe;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* ── ROWS ── */
+.row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 0.8fr 2fr 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 1.5rem;
+  border-bottom: 1px solid #f8f7ff;
+  transition: background 0.15s;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row:not(.header):hover {
+  background: #faf9ff;
+}
+
+/* ── HEADER ROW ── */
+.row.header {
+  background: #faf9ff;
+  border-bottom: 1px solid #ede9fe;
+}
+
+.row.header span {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── DATA CELLS ── */
+.row:not(.header) span {
+  font-size: 13px;
+  color: #333;
+}
+
+/* Nom étudiant */
+.row:not(.header) span:first-child {
+  font-weight: 600;
+  color: #1a1047;
+}
+
+/* ── LIEN TÉLÉCHARGER ── */
+.row a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f0eeff;
+  color: #6c47ff;
+  border: 1px solid #ede9fe;
+  border-radius: 7px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.row a:hover {
+  background: #ede9fe;
+}
+
+/* ── INPUTS ── */
+.row input[type="number"] {
+  background: #f8f7ff;
+  border: 1px solid #ede9fe;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #1a1047;
+  font-family: inherit;
+  outline: none;
+  width: 70px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.row input[type="number"]:focus {
+  border-color: #6c47ff;
+  background: #faf9ff;
+}
+
+.row input:not([type="number"]) {
+  background: #f8f7ff;
+  border: 1px solid #ede9fe;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #1a1047;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.row input:not([type="number"])::placeholder {
+  color: #bbb;
+}
+
+.row input:not([type="number"]):focus {
+  border-color: #6c47ff;
+  background: #faf9ff;
+}
+
+/* ── BOUTON ── */
+.btn {
+  background: #6c47ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.btn:hover {
+  background: #7c5cff;
+}
+
+.btn:active {
+  background: #5a36e8;
+  transform: scale(0.98);
+}

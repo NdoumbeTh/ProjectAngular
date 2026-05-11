@@ -1,0 +1,22 @@
+<nav class="navbar">
+
+  <div class="logo">
+    ISI E-Learning
+  </div>
+
+  <div class="nav-links">
+    <a routerLink="/dashboard">Dashboard</a>
+    <a routerLink="/courses">Cours</a>
+  </div>
+
+  <div class="user-section">
+    @if (user) {
+      <span class="user-name">👤 {{ user.name }}</span>
+    }
+
+    <button class="btn danger" (click)="logout()">
+      Déconnexion
+    </button>
+  </div>
+
+</nav>

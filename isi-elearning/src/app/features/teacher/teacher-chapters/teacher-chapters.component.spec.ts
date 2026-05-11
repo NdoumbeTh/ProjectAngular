@@ -1,0 +1,23 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { TeacherChaptersComponent } from './teacher-chapters.component';
+
+describe('TeacherChaptersComponent', () => {
+  let component: TeacherChaptersComponent;
+  let fixture: ComponentFixture<TeacherChaptersComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TeacherChaptersComponent]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(TeacherChaptersComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

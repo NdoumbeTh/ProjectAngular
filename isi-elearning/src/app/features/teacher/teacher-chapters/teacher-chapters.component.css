@@ -1,0 +1,141 @@
+/* ── TITRE ── */
+h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1047;
+  margin: 2rem 2rem 1.5rem;
+}
+
+/* ── FORM ── */
+.form {
+  background: white;
+  border: 1px solid #ede9fe;
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin: 0 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form input[type="text"],
+.form input:not([type="file"]) {
+  background: #f8f7ff;
+  border: 1px solid #ede9fe;
+  border-radius: 9px;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: #1a1047;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.form input::placeholder {
+  color: #bbb;
+}
+
+.form input:focus {
+  border-color: #6c47ff;
+  background: #faf9ff;
+}
+
+.form input[type="file"] {
+  font-size: 13px;
+  color: #555;
+  background: #f8f7ff;
+  border: 1px dashed #c4b5fd;
+  border-radius: 9px;
+  padding: 10px 14px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form input[type="file"]::file-selector-button {
+  background: #ede9fe;
+  color: #6c47ff;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.form button {
+  align-self: flex-start;
+  background: #6c47ff;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  padding: 10px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.form button:hover {
+  background: #7c5cff;
+}
+
+/* ── CHAPITRES ── */
+.chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 2rem 2rem;
+}
+
+/* ── CHAPTER CARD ── */
+.chapter-card {
+  background: white;
+  border: 1px solid #ede9fe;
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.2s;
+}
+
+.chapter-card:hover {
+  border-color: #c4b5fd;
+}
+
+.chapter-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1047;
+  margin: 0;
+}
+
+.chapter-card video {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 10px;
+  background: #000;
+}
+
+.chapter-card button {
+  align-self: flex-start;
+  background: #fff1f2;
+  color: #e11d48;
+  border: 1px solid #fecdd3;
+  border-radius: 9px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.chapter-card button:hover {
+  background: #ffe4e6;
+}

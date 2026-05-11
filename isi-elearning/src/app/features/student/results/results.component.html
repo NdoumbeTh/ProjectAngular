@@ -1,0 +1,156 @@
+<div class="results-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h2>Mes résultats</h2>
+      <p>Vue centralisée de tous vos quiz et devoirs corrigés</p>
+    </div>
+    <a routerLink="/student" class="btn-back">
+      <i class="ti ti-arrow-left"></i> Retour
+    </a>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading) {
+    <div class="loading">
+      <i class="ti ti-loader"></i> Chargement...
+    </div>
+  }
+
+  @if (!loading) {
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-card purple">
+        <div class="stat-icon"><i class="ti ti-help-circle"></i></div>
+        <div class="stat-info">
+          <p class="stat-value">{{ quizResults.length }}</p>
+          <p class="stat-label">Quiz passés</p>
+        </div>
+      </div>
+
+      <div class="stat-card blue">
+        <div class="stat-icon"><i class="ti ti-clipboard-check"></i></div>
+        <div class="stat-info">
+          <p class="stat-value">{{ assignmentResults.length }}</p>
+          <p class="stat-label">Devoirs corrigés</p>
+        </div>
+      </div>
+
+      <div class="stat-card green">
+        <div class="stat-icon"><i class="ti ti-chart-line"></i></div>
+        <div class="stat-info">
+          <p class="stat-value">{{ avgQuizScore }}%</p>
+          <p class="stat-label">Moy. quiz</p>
+        </div>
+      </div>
+
+      <div class="stat-card orange">
+        <div class="stat-icon"><i class="ti ti-star"></i></div>
+        <div class="stat-info">
+          <p class="stat-value">{{ avgAssignmentGrade }}/20</p>
+          <p class="stat-label">Moy. devoirs</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button
+        class="tab"
+        [class.active]="activeTab === 'all'"
+        (click)="activeTab = 'all'">
+        Tout ({{ allResults.length }})
+      </button>
+      <button
+        class="tab"
+        [class.active]="activeTab === 'quiz'"
+        (click)="activeTab = 'quiz'">
+        <i class="ti ti-help-circle"></i> Quiz ({{ quizResults.length }})
+      </button>
+      <button
+        class="tab"
+        [class.active]="activeTab === 'assignments'"
+        (click)="activeTab = 'assignments'">
+        <i class="ti ti-clipboard-list"></i> Devoirs ({{ assignmentResults.length }})
+      </button>
+    </div>
+
+    <!-- LISTE -->
+    @if (displayedResults.length === 0) {
+      <div class="empty">
+        <i class="ti ti-mood-empty"></i>
+        <p>Aucun résultat pour cette catégorie.</p>
+      </div>
+    }
+
+    <div class="results-list">
+      @for (r of displayedResults; track r.id) {
+
+        <!-- QUIZ RESULT -->
+        @if (r.type === 'quiz') {
+          <div class="result-card">
+            <div class="result-icon quiz">
+              <i class="ti ti-help-circle"></i>
+            </div>
+            <div class="result-body">
+              <p class="result-title">{{ r.quiz_title }}</p>
+              <p class="result-course">
+                <i class="ti ti-book"></i> {{ r.course_title }}
+              </p>
+              <p class="result-date">
+                <i class="ti ti-calendar"></i>
+                {{ r.created_at | date:'dd/MM/yyyy' }}
+              </p>
+            </div>
+            <div class="result-score" [ngClass]="scoreColor(scorePercent(r))">
+              <span class="score-value">{{ r.score }}/{{ r.total }}</span>
+              <span class="score-pct">{{ scorePercent(r) }}%</span>
+            </div>
+          </div>
+        }
+
+        <!-- DEVOIR RESULT -->
+        @if (r.type === 'assignment') {
+          <div class="result-card">
+            <div class="result-icon assignment">
+              <i class="ti ti-clipboard-list"></i>
+            </div>
+            <div class="result-body">
+              <p class="result-title">{{ r.assignment_title }}</p>
+              <p class="result-course">
+                <i class="ti ti-book"></i> {{ r.course_title }}
+              </p>
+              @if (r.feedback) {
+                <p class="result-feedback">
+                  <i class="ti ti-message"></i> {{ r.feedback }}
+                </p>
+              }
+              <p class="result-date">
+                <i class="ti ti-calendar"></i>
+                {{ r.created_at | date:'dd/MM/yyyy' }}
+              </p>
+            </div>
+            <div class="result-score" [ngClass]="r.grade !== null ? gradeColor(r.grade) : 'pending'">
+              @if (r.grade !== null) {
+                <span class="score-value">{{ r.grade }}/20</span>
+                <span class="score-pct">
+                  @if (r.grade >= 16) { Très bien }
+                  @else if (r.grade >= 14) { Bien }
+                  @else if (r.grade >= 10) { Passable }
+                  @else { Insuffisant }
+                </span>
+              } @else {
+                <span class="score-value">—</span>
+                <span class="score-pct">En attente</span>
+              }
+            </div>
+          </div>
+        }
+
+      }
+    </div>
+  }
+
+</div>

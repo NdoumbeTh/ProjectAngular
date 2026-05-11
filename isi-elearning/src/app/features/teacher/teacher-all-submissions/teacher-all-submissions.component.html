@@ -1,0 +1,167 @@
+<div class="submissions-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h2>Soumissions des étudiants</h2>
+      <p>Corrigez les devoirs de tous vos cours</p>
+    </div>
+    <a routerLink="/teacher" class="btn-back">
+      <i class="ti ti-arrow-left"></i> Retour
+    </a>
+  </div>
+
+  @if (loading) {
+    <div class="loading">
+      <i class="ti ti-loader"></i> Chargement...
+    </div>
+  }
+
+  @if (!loading) {
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-card orange">
+        <div class="stat-icon"><i class="ti ti-clock"></i></div>
+        <div class="stat-info">
+          <p class="stat-value">{{ pendingCount }}</p>
+          <p class="stat-label">En attente</p>
+        </div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon"><i class="ti ti-circle-check"></i></div>
+        <div class="stat-info">
+          <p class="stat-value">{{ gradedCount }}</p>
+          <p class="stat-label">Corrigés</p>
+        </div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon"><i class="ti ti-inbox"></i></div>
+        <div class="stat-info">
+          <p class="stat-value">{{ submissions.length }}</p>
+          <p class="stat-label">Total</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab" [class.active]="activeFilter === 'pending'"
+        (click)="activeFilter = 'pending'">
+        <i class="ti ti-clock"></i>
+        En attente
+        @if (pendingCount > 0) {
+          <span class="tab-badge">{{ pendingCount }}</span>
+        }
+      </button>
+      <button class="tab" [class.active]="activeFilter === 'graded'"
+        (click)="activeFilter = 'graded'">
+        <i class="ti ti-circle-check"></i>
+        Corrigés ({{ gradedCount }})
+      </button>
+      <button class="tab" [class.active]="activeFilter === 'all'"
+        (click)="activeFilter = 'all'">
+        Tous ({{ submissions.length }})
+      </button>
+    </div>
+
+    <!-- EMPTY -->
+    @if (filtered.length === 0) {
+      <div class="empty">
+        <i class="ti ti-mood-happy"></i>
+        @if (activeFilter === 'pending') {
+          <p>Aucun devoir en attente de correction !</p>
+        } @else {
+          <p>Aucune soumission dans cette catégorie.</p>
+        }
+      </div>
+    }
+
+    <!-- LISTE -->
+    <div class="submissions-list">
+      @for (s of filtered; track s.id) {
+        <div class="submission-card" [class.graded]="s.grade !== null">
+
+          <!-- INFO ÉTUDIANT + DEVOIR -->
+          <div class="submission-header">
+            <div class="student-avatar">
+              {{ s.student_name?.charAt(0) | uppercase }}
+            </div>
+            <div class="submission-info">
+              <p class="student-name">{{ s.student_name }}</p>
+              <p class="assignment-name">
+                <i class="ti ti-clipboard-list"></i>
+                {{ s.assignment_title }}
+              </p>
+              <p class="course-name">
+                <i class="ti ti-book"></i>
+                {{ s.course_title }}
+              </p>
+            </div>
+            <div class="submission-meta">
+              <span class="submission-date">
+                <i class="ti ti-calendar"></i>
+                {{ s.created_at | date:'dd/MM/yyyy' }}
+              </span>
+              @if (s.grade !== null) {
+                <span class="grade-badge" [ngClass]="{
+                  green:  s.grade >= 16,
+                  orange: s.grade >= 10 && s.grade < 16,
+                  red:    s.grade < 10
+                }">
+                  {{ s.grade }}/20
+                </span>
+              } @else {
+                <span class="pending-badge">
+                  <i class="ti ti-clock"></i> En attente
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="submission-body">
+            <a [href]="s.file_url" target="_blank" class="btn-file">
+              <i class="ti ti-download"></i> Télécharger la copie
+            </a>
+
+            <!-- FORMULAIRE DE CORRECTION -->
+            <div class="grade-form">
+              <div class="grade-inputs">
+                <div class="field">
+                  <label>Note / 20</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="20"
+                    [(ngModel)]="gradeInputs[s.id].grade"
+                    placeholder="0">
+                </div>
+                <div class="field feedback-field">
+                  <label>Commentaire</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="gradeInputs[s.id].feedback"
+                    placeholder="Feedback pour l'étudiant...">
+                </div>
+              </div>
+              <button
+                class="btn-grade"
+                (click)="grade(s)"
+                [class.already]="s.grade !== null">
+                @if (s.grade !== null) {
+                  <i class="ti ti-refresh"></i> Modifier
+                } @else {
+                  <i class="ti ti-check"></i> Enregistrer
+                }
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

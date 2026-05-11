@@ -1,0 +1,161 @@
+<div class="dashboard">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h2>Bonjour, {{ user?.name }} 👋</h2>
+      <p>Tableau de bord enseignant — {{ today | date:'EEEE d MMMM yyyy' : '' : 'fr' }}</p>
+    </div>
+    <div class="header-right">
+      <div class="user-chip">
+        <div class="user-avatar">{{ user?.name?.charAt(0) | uppercase }}</div>
+        <div>
+          <span class="chip-name">{{ user?.name }}</span>
+          <span class="chip-role">Enseignant</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card purple">
+      <div class="stat-icon"><i class="ti ti-book"></i></div>
+      <div class="stat-info">
+        <p class="stat-value">{{ stats.courses }}</p>
+        <p class="stat-label">Cours</p>
+        <p class="stat-sub">Publiés</p>
+      </div>
+    </div>
+
+    <div class="stat-card blue">
+      <div class="stat-icon"><i class="ti ti-users"></i></div>
+      <div class="stat-info">
+        <p class="stat-value">{{ stats.students }}</p>
+        <p class="stat-label">Étudiants</p>
+        <p class="stat-sub">Inscrits</p>
+      </div>
+    </div>
+
+    <div class="stat-card orange">
+      <div class="stat-icon"><i class="ti ti-clipboard-list"></i></div>
+      <div class="stat-info">
+        <p class="stat-value">{{ stats.assignments }}</p>
+        <p class="stat-label">Devoirs</p>
+        <p class="stat-sub">À corriger</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY GRID -->
+  <div class="body-grid">
+
+    <!-- CREATE COURSE -->
+    <div class="create-course">
+      <h3><i class="ti ti-plus"></i> Créer un cours</h3>
+      <div class="field">
+        <label>Titre du cours</label>
+        <input
+          type="text"
+          [(ngModel)]="newCourse.title"
+          placeholder="Ex : Introduction à Angular"
+        />
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea
+          [(ngModel)]="newCourse.description"
+          placeholder="Décrivez le contenu du cours..."
+        ></textarea>
+      </div>
+      <button class="create-btn" (click)="createCourse()">
+        <i class="ti ti-plus"></i> Créer le cours
+      </button>
+    </div>
+
+    <!-- ACTIVITÉ RAPIDE -->
+    <div class="quick-panel">
+      <h3><i class="ti ti-bolt"></i> Accès rapide</h3>
+      <div class="quick-list">
+        <div class="quick-item">
+          <div class="quick-icon purple"><i class="ti ti-book"></i></div>
+          <div class="quick-info">
+            <span>Total cours</span>
+            <strong>{{ courses.length }}</strong>
+          </div>
+        </div>
+        <div class="quick-item">
+          <div class="quick-icon green"><i class="ti ti-circle-check"></i></div>
+          <div class="quick-info">
+            <span>Cours publiés</span>
+            <strong>{{ courses.length }}</strong>
+          </div>
+        </div>
+        <div class="quick-item">
+          <div class="quick-icon orange"><i class="ti ti-clock"></i></div>
+          <div class="quick-info">
+            <span>Devoirs en attente</span>
+            <strong>{{ stats.assignments }}</strong>
+          </div>
+        </div>
+        <div class="quick-item">
+          <div class="quick-icon blue"><i class="ti ti-users"></i></div>
+          <div class="quick-info">
+            <span>Étudiants actifs</span>
+            <strong>{{ stats.students }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- COURSES HEADER -->
+  <div class="courses-header">
+    <h3><i class="ti ti-book"></i> Mes cours</h3>
+    <span class="count-badge">{{ courses.length }} cours</span>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading) {
+    <div class="loading">
+      <i class="ti ti-loader"></i>
+      Chargement...
+    </div>
+  }
+
+  <!-- EMPTY -->
+  @if (!loading && courses.length === 0) {
+    <div class="empty">
+      <i class="ti ti-book-off"></i>
+      <h3>Aucun cours</h3>
+      <p>Commencez par créer votre premier cours</p>
+    </div>
+  }
+
+  <!-- COURSES GRID -->
+  @if (!loading && courses.length > 0) {
+    <div class="courses">
+      @for (c of courses; track c.id) {
+        <div class="course-card">
+          <div class="course-thumb">
+            <i class="ti ti-book-2"></i>
+          </div>
+          <div class="course-body">
+            <h4>{{ c.title }}</h4>
+            <p>{{ c.description }}</p>
+          </div>
+          <div class="course-footer">
+            <button class="manage-btn" [routerLink]="['/teacher/course', c.id]">
+              <i class="ti ti-settings"></i> Gérer
+            </button>
+            <button class="delete-btn" (click)="deleteCourse(c.id)">
+              <i class="ti ti-trash">Sup</i>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

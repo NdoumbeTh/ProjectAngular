@@ -1,0 +1,43 @@
+<div class="container">
+
+  <h2>📥 Corrections des devoirs</h2>
+
+  <div class="table">
+
+    <div class="row header">
+      <span>Étudiant</span>
+      <span>Fichier</span>
+      <span>Note</span>
+      <span>Feedback</span>
+      <span>Action</span>
+    </div>
+
+    @for (s of submissions; track s.id) {
+      <div class="row">
+        <!-- NOM -->
+        <span>{{ s.name }}</span>
+
+        <!-- FICHIER -->
+        <span>
+          <a [href]="s.file_url" target="_blank">📥 Télécharger</a>
+        </span>
+
+        <!-- NOTE -->
+        <span>
+          <input type="number" [(ngModel)]="s.grade" min="0" max="20">
+        </span>
+
+        <!-- FEEDBACK -->
+        <span>
+          <input [(ngModel)]="s.feedback" placeholder="Commentaire">
+        </span>
+
+        <!-- ACTION -->
+        <span>
+          <button (click)="grade(s)" class="btn">✔ Enregistrer</button>
+        </span>
+      </div>
+    }
+  </div>
+
+</div>

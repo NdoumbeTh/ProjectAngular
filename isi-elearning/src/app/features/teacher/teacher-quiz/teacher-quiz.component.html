@@ -1,0 +1,122 @@
+<div class="quiz-container">
+
+  <h2>Quiz du cours</h2>
+
+  <!-- ── LISTE DES QUIZ EXISTANTS ── -->
+  <div class="section">
+    <h3>Quiz existants</h3>
+
+    @if (quizzes.length === 0) {
+      <div class="empty-state">
+        <i class="ti ti-help-off"></i>
+        <p>Aucun quiz pour ce cours.</p>
+      </div>
+    }
+
+    <div class="quiz-list">
+      @for (q of quizzes; track q.id) {
+        <div class="quiz-card">
+
+          <div class="quiz-card-header">
+            <div>
+              <h4>{{ q.title }}</h4>
+              <span class="questions-count">
+                <i class="ti ti-list"></i>
+                {{ q.questions?.length || 0 }} question(s)
+              </span>
+            </div>
+            <button class="btn-danger" (click)="deleteQuiz(q.id)">
+              <i class="ti ti-trash"></i> Supprimer
+            </button>
+          </div>
+
+          <!-- QUESTIONS DU QUIZ -->
+          @if (q.questions?.length > 0) {
+            <div class="questions-preview">
+              @for (question of q.questions; let i = $index; track question.id) {
+                <div class="question-preview-card">
+                  <p class="question-label">Q{{ i + 1 }}. {{ question.question }}</p>
+                  <ul class="options-list">
+                    @for (opt of question.options; track opt.id) {
+                      <li [class.correct]="opt.is_correct">
+                        <i class="ti"
+                           [class.ti-circle-check]="opt.is_correct"
+                           [class.ti-circle]="!opt.is_correct">
+                        </i>
+                        {{ opt.option_text }}
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+          }
+
+        </div>
+      }
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ── CRÉER UN QUIZ ── -->
+  <div class="section">
+    <h3>Créer un nouveau quiz</h3>
+
+    <div class="form-card">
+
+      <div class="field">
+        <label>Titre du quiz</label>
+        <input [(ngModel)]="quiz.title" placeholder="Ex : Introduction à Angular">
+      </div>
+
+      <!-- QUESTIONS -->
+      @for (q of quiz.questions; let i = $index; track i) {
+        <div class="question-builder">
+
+          <div class="question-builder-header">
+            <span class="question-number">Question {{ i + 1 }}</span>
+          </div>
+
+          <div class="field">
+            <label>Énoncé</label>
+            <input [(ngModel)]="q.question" placeholder="Tapez votre question...">
+          </div>
+
+          <div class="options-builder">
+            <label>Options</label>
+            @for (opt of q.options; let j = $index; track j) {
+              <div class="option-row">
+                <input [(ngModel)]="opt.text" placeholder="Option {{ j + 1 }}">
+                <label class="radio-label">
+                  <input
+                    type="radio"
+                    [name]="'q' + i"
+                    (change)="setCorrect(q, j)"
+                    [checked]="opt.isCorrect">
+                  Bonne réponse
+                </label>
+              </div>
+            }
+          </div>
+
+          <button class="btn-outline" (click)="addOption(q)">
+            <i class="ti ti-plus"></i> Ajouter une option
+          </button>
+
+        </div>
+      }
+
+      <button class="btn-add-question" (click)="addQuestion()">
+        <i class="ti ti-plus"></i> Ajouter une question
+      </button>
+
+    </div>
+
+    <button class="btn-save" (click)="createQuiz()" [disabled]="!quiz.title || quiz.questions.length === 0">
+      <i class="ti ti-device-floppy"></i> Enregistrer le quiz
+    </button>
+
+  </div>
+
+</div>

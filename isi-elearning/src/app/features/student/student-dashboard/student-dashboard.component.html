@@ -1,0 +1,135 @@
+<div class="dashboard">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h2>Bonjour, {{ user?.name }} 👋</h2>
+      <p>Bienvenue sur votre espace étudiant</p>
+    </div>
+    <div class="header-date">
+      <i class="ti ti-calendar"></i>
+      {{ today | date:'dd MMM yyyy' }}
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card blue">
+      <div class="stat-icon"><i class="ti ti-book"></i></div>
+      <div class="stat-info">
+        <p class="stat-value">{{ courses.length }}</p>
+        <p class="stat-label">Mes cours</p>
+        <p class="stat-sub">Inscrits</p>
+      </div>
+    </div>
+
+    <div class="stat-card orange">
+      <div class="stat-icon"><i class="ti ti-clipboard-list"></i></div>
+      <div class="stat-info">
+        <p class="stat-value">{{ assignments.length }}</p>
+        <p class="stat-label">Devoirs</p>
+        <p class="stat-sub">À rendre</p>
+      </div>
+    </div>
+
+    <div class="stat-card green">
+      <div class="stat-icon"><i class="ti ti-chart-line"></i></div>
+      <div class="stat-info">
+        <p class="stat-value">{{ avgProgress }}%</p>
+        <p class="stat-label">Progression</p>
+        <p class="stat-sub">Moyenne globale</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY GRID -->
+  <div class="body-grid">
+
+    <!-- PROGRESSION GLOBALE -->
+    <div class="panel progress-panel">
+      <h3><i class="ti ti-chart-bar"></i> Ma progression</h3>
+      <div class="progress-courses">
+        @for (c of courses; track c.id) {
+          <div class="progress-row">
+            <span class="progress-title">{{ c.title }}</span>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="c.progress || 0"></div>
+              </div>
+            </div>
+            <span class="progress-pct">{{ c.progress || 0 }}%</span>
+          </div>
+        }
+        @if (courses.length === 0) {
+          <p class="empty-text">Aucun cours en cours.</p>
+        }
+      </div>
+    </div>
+
+    <!-- DEVOIRS RÉCENTS -->
+    <div class="panel">
+      <h3><i class="ti ti-clipboard-list"></i> Devoirs récents</h3>
+      <div class="assignments-mini">
+        @for (a of assignments; track a.id) {
+          <div class="assignment-mini-card">
+            <div class="assignment-dot"></div>
+            <div class="assignment-info">
+              <p class="assignment-title">{{ a.title }}</p>
+              <p class="assignment-course">{{ a.course || 'Cours' }}</p>
+            </div>
+            <span class="assignment-status" [ngClass]="a.status?.toLowerCase()">
+              {{ a.status || 'Soumis' }}
+            </span>
+          </div>
+        }
+        @if (assignments.length === 0) {
+          <p class="empty-text">Aucun devoir récent.</p>
+        }
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MES COURS -->
+  <div class="section-header">
+    <h3><i class="ti ti-book"></i> Continuer mes cours</h3>
+    <a routerLink="/courses" class="see-all">Voir tous →</a>
+  </div>
+
+  @if (courses.length === 0) {
+    <div class="empty-courses">
+      <i class="ti ti-book-off"></i>
+      <p>Vous n'êtes inscrit à aucun cours.</p>
+      <a routerLink="/courses" class="btn-enroll">
+        <i class="ti ti-plus"></i> Explorer les cours
+      </a>
+    </div>
+  }
+
+  <div class="courses">
+    @for (c of courses; track c.id) {
+      <div class="course-card">
+        <div class="course-thumb" [style.background]="c.color || '#6c47ff'">
+          <i class="ti ti-book-2"></i>
+        </div>
+        <div class="course-body">
+          <h4>{{ c.title }}</h4>
+          <p class="course-teacher">
+            <i class="ti ti-user"></i>
+            {{ c.teacher || 'Enseignant' }}
+          </p>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="c.progress || 0"></div>
+          </div>
+          <div class="course-footer">
+            <span class="progress-pct-badge">{{ c.progress || 0 }}%</span>
+            <button [routerLink]="['/student/course', c.id]">
+              Continuer <i class="ti ti-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+</div>
