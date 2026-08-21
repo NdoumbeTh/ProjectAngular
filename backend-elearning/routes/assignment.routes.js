@@ -4,16 +4,18 @@ const router = express.Router();
 const controller = require('../controllers/assignment.controller');
 const auth = require('../middleware/auth.middleware');
 const upload = require('../middleware/uploadAssignment'); 
-router.get('/teacher/all-submissions', auth, teacherOnly, assignmentController.getTeacherSubmissions);
-router.put('/submissions/:id/grade', auth, teacherOnly, assignmentController.gradeSubmission);
 
-// middleware teacher
 const teacherOnly = (req, res, next) => {
   if(req.role !== 'teacher'){
     return res.status(403).json({message: "Accès refusé"});
   }
   next();
 };
+
+router.get('/teacher/all-submissions', auth, teacherOnly, controller.getTeacherSubmissions);
+router.put('/submissions/:id/grade', auth, teacherOnly, controller.gradeSubmission);
+
+// middleware teacher
 
 // ✅ CREATE avec upload
 router.post(

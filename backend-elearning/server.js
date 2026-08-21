@@ -16,23 +16,24 @@ const submissionRoutes = require('./routes/submission.routes');
 const adminRoutes = require('./routes/admin.routes');
 const progressRoutes = require('./routes/progress.routes');
 
+// Utilisé par HEALTHCHECK Docker et les probes readiness/liveness de Kubernetes
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 
 app.use('/api/progress', progressRoutes);
 app.use('/uploads', express.static('uploads'));
-app.use('/api/admin', require('./routes/admin.routes'));
+app.use('/api/admin', adminRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/quiz', quizRoutes);
-
-
 app.use('/api/chapters', chapterRoutes);
-
 app.use('/api/enrollments', enrollmentRoutes);
-
 app.use('/api/courses', courseRoutes);
-
 app.use('/api/auth', authRoutes);
 
-app.listen(3000, () => {
-console.log("Serveur démarré sur port 3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Serveur démarré sur port ${PORT}`);
 });

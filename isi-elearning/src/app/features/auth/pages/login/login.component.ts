@@ -34,7 +34,6 @@ login(){
       this.auth.saveToken(res.accessToken);
       this.auth.saveUser(res);
 
-      // 🔥 REDIRECTION SELON RÔLE
       if(res.role === 'admin'){
         this.router.navigate(['/admin']);
       }

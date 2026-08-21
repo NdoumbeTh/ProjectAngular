@@ -1,0 +1,42 @@
+# Bonus : déploiement du front Angular dans le cluster.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: elearning
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          # ⚠️ remplacer par l'image poussée sur Docker Hub, ex: monuser/elearning-frontend:v1
+          image: ndoumbe234/elearning-frontend:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15

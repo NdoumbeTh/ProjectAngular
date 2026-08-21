@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
     token = token.slice(7);
   }
 
-  jwt.verify(token, "SECRET_KEY", (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET || "SECRET_KEY", (err, decoded) => {
 
     if (err) {
       return res.status(401).json({ message: "Token invalide" });

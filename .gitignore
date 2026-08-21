@@ -1,0 +1,22 @@
+# Dépendances
+node_modules/
+
+# Secrets locaux (ne jamais commiter le vrai .env)
+.env
+.env.local
+backend-elearning/.env
+
+# Fichiers uploadés par les utilisateurs (vidéos, devoirs, rendus)
+backend-elearning/uploads/*
+!backend-elearning/uploads/.gitkeep
+
+# Build Angular
+isi-elearning/dist/
+isi-elearning/.angular/
+
+# Logs
+npm-debug.log*
+
+# OS / IDE
+.DS_Store
+Thumbs.db

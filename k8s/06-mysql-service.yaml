@@ -1,0 +1,15 @@
+# ClusterIP : uniquement accessible depuis l'intérieur du cluster (l'API),
+# jamais exposée à l'extérieur. Le nom "mysql-service" sert de DB_HOST
+# (résolution DNS interne fournie par CoreDNS).
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: elearning
+spec:
+  type: ClusterIP
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306

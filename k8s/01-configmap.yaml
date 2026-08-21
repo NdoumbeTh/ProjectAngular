@@ -1,0 +1,12 @@
+# Configuration NON sensible de l'API (pas de mot de passe ici)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elearning-config
+  namespace: elearning
+data:
+  DB_HOST: "mysql-service"
+  DB_PORT: "3306"
+  DB_NAME: "elearning"
+  PORT: "3000"
+  NODE_ENV: "production"
